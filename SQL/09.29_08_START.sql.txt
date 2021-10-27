@@ -1,0 +1,255 @@
+select * From Tab;
+SELECT
+    * FROM employees
+    
+    CREATE TABLE DEPARTMENT
+        (DNO NUMBER(2) CONSTRAINT PK_DEPT PRIMARY KEY,
+         DNAME VARCHAR2(14),
+	 LOC   VARCHAR2(13) ) ;
+     CREATE TABLE EMPLOYEE 
+        (ENO NUMBER(4) CONSTRAINT PK_EMP PRIMARY KEY,
+	 ENAME VARCHAR2(10),
+ 	 JOB   VARCHAR2(9),
+	 MANAGER  NUMBER(4),
+	 HIREDATE DATE, 
+	 SALARY NUMBER(7,2),
+	 COMMISSION NUMBER(7,2),
+	 DNO NUMBER(2) CONSTRAINT FK_DNO REFERENCES DEPARTMENT);
+CREATE TABLE SALGRADE
+        (GRADE NUMBER,
+	 LOSAL NUMBER,
+	 HISAL NUMBER );
+     
+     select * from tab;
+     
+     
+INSERT INTO DEPARTMENT VALUES (10,'ACCOUNTING','NEW YORK');
+INSERT INTO DEPARTMENT VALUES (20,'RESEARCH','DALLAS');
+INSERT INTO DEPARTMENT VALUES (30,'SALES','CHICAGO');
+INSERT INTO DEPARTMENT VALUES (40,'OPERATIONS','BOSTON');
+
+INSERT INTO EMPLOYEE VALUES
+(7369,'SMITH','CLERK',    7902,to_date('17-12-1980','dd-mm-yyyy'),800,NULL,20);
+INSERT INTO EMPLOYEE VALUES
+(7499,'ALLEN','SALESMAN', 7698,to_date('20-2-1981', 'dd-mm-yyyy'),1600,300,30);
+INSERT INTO EMPLOYEE VALUES
+(7521,'WARD','SALESMAN',  7698,to_date('22-2-1981', 'dd-mm-yyyy'),1250,500,30);
+INSERT INTO EMPLOYEE VALUES
+(7566,'JONES','MANAGER',  7839,to_date('2-4-1981',  'dd-mm-yyyy'),2975,NULL,20);
+INSERT INTO EMPLOYEE VALUES
+(7654,'MARTIN','SALESMAN',7698,to_date('28-9-1981', 'dd-mm-yyyy'),1250,1400,30);
+INSERT INTO EMPLOYEE VALUES
+(7698,'BLAKE','MANAGER',  7839,to_date('1-5-1981',  'dd-mm-yyyy'),2850,NULL,30);
+INSERT INTO EMPLOYEE VALUES
+(7782,'CLARK','MANAGER',  7839,to_date('9-6-1981',  'dd-mm-yyyy'),2450,NULL,10);
+INSERT INTO EMPLOYEE VALUES
+(7788,'SCOTT','ANALYST',  7566,to_date('13-07-1987', 'dd-mm-yyyy'),3000,NULL,20);
+INSERT INTO EMPLOYEE VALUES
+(7839,'KING','PRESIDENT', NULL,to_date('17-11-1981','dd-mm-yyyy'),5000,NULL,10);
+INSERT INTO EMPLOYEE VALUES
+(7844,'TURNER','SALESMAN',7698,to_date('8-9-1981',  'dd-mm-yyyy'),1500,0,30);
+INSERT INTO EMPLOYEE VALUES
+(7876,'ADAMS','CLERK',    7788,to_date('13-07-1987', 'dd-mm-yyyy'),1100,NULL,20);
+INSERT INTO EMPLOYEE VALUES
+(7900,'JAMES','CLERK',    7698,to_date('3-12-1981', 'dd-mm-yyyy'),950,NULL,30);
+INSERT INTO EMPLOYEE VALUES
+(7902,'FORD','ANALYST',   7566,to_date('3-12-1981', 'dd-mm-yyyy'),3000,NULL,20);
+INSERT INTO EMPLOYEE VALUES
+(7934,'MILLER','CLERK',   7782,to_date('23-1-1982', 'dd-mm-yyyy'),1300,NULL,10);
+
+INSERT INTO SALGRADE VALUES (1, 700,1200);
+INSERT INTO SALGRADE VALUES (2,1201,1400);
+INSERT INTO SALGRADE VALUES (3,1401,2000);
+INSERT INTO SALGRADE VALUES (4,2001,3000);
+
+commit;
+
+     select * from EMPLOYEE; --14개행
+      select * from department; --4개행
+       select * from salgrade; --5개행
+       
+       
+       
+       desc employee; --속성 보기
+      DESC Dual; -- 가상의 테이블, 더미 데이터가 있음 메모장 같은거
+      select sysdate from dual; -- 오늘 data 입력 하기
+      
+      
+--     select -- 원하는 정보 추출
+--    아스타 * 는 모든 필드를 의미 대신 필드 명(속성값)을 넣어주면 원하는 정보 추출 할수 있다. 
+--    from 테이블 이름 ;
+--    기본적으로 테이블을 작성 할 때는 스키마가 있어야 하는데 테이블이 하나이면 그냥 해도됨.
+--  데이터 형태가 숫지인 컬럼의 경우 산술 연산을 추가해서 값을 가져 올 수 있다.
+
+    select salary, salary *0.1 from employee;
+
+
+-- commition 값에 null 값이 있는데 null 값이 있으면 0으로 치환 해 줄 수 있는 함수가 있다.(NVL)
+select salary, salary *0.1, commission, commission+employee.salary from employee;
+select salary, salary *0.1, commission, salary+nvl(commission, 0)as 급여 from employee;
+
+--별칭은 'as 별칭' 을 넣고, 특수문자, 공백이나 대소문자를 넣으려면 ""로 묵어서 출력 하면 된다. [alias]
+select salary, salary *0.1, commission, salary+nvl(commission, 0)as "욜@  로" from employee;
+
+--중복된 것을 제거 하고 싶으면 distinct
+    select dno from employee;
+    select DIstinct dno from employee;
+
+
+--where : salary가 1500이상 인 table 불러오기
+    select * from employee where salary >=1500;
+--where : salary가 1500이상 인 table 불러오기
+    select * from employee where job ='PRESIDENT';
+    
+    select eno, ename, salary from employee where ename > 'SCOTT';
+    select *from employee where hiredate <= '1981/01/01';
+    
+    
+    --null 값 가져오기 commission is null;
+    --null 값이 아닌 것 가져오기 commission is not null;
+    
+    SELECT
+        * FROM employee where commission is null;
+        
+        
+        select ename from employee where commission is null;
+        
+        
+    -- AND OR NOT 
+    SELECT ENO, ENAME, JOB, SALARY, COMMISSION FROM EMPLOYEE WHERE COMMISSION IS NOT NULL AND SALARY > 200;
+        
+        --조건 2개다 만족 :AND
+        --조건 1개 이상 만족 : OR
+        -- 조건을 만족 하지 않는  :NOT
+        
+        
+    -- 자다가 BETWEEN 놓쳤다.    
+    SELECT * FROM EMPLOYEE WHERE 1000 <= SALARY AND SALARY <= 1500;
+    SELECT * FROM EMPLOYEE WHERE SALARY BETWEEN 1000 AND 1500;
+    SELECT * FROM EMPLOYEE WHERE ORDER BY SALARY;
+    
+    
+    --IN 에 포함 되는 값만 출력
+    SELECT * FROM EMPLOYEE WHERE COMMISSION IN (300, 500);
+    
+    
+    --LIKE 연산자와 와일드카드 
+    -- 컬럼의 저장된 문자중 일부만 일치해도 조회가 가능하도록 *을 넣어 조회
+    -- % : 어떤 값이 와도 상관없음
+    -- _ : _수에 맞는 어떤 값이 와도 상관없음
+    
+    select * FROM EMPLOYEE WHERE ENAME LIKE 'F%'; -- F로 시작하는 이름
+     select * FROM EMPLOYEE WHERE ENAME LIKE '%E%';--E 가 들어가는이름 
+    select * FROM EMPLOYEE WHERE ENAME LIKE '_A%'; --이름의 2번째 철자가 A인 사원 
+    
+    
+    
+    --ORDER BY : DEFAULT = 오름차순. ASC를 입력해도됨
+    select * FROM EMPLOYEE ORDER BY ENO DESC; --내림차순,
+    select * FROM EMPLOYEE ORDER BY SALARY ;
+    
+    --숫자나 날짜 가능
+    --여러개의 정렬 조건도 정렬 가능 콤마 순서의 앞에 오면 먼저 정렬 후 다음 정렬 가능
+    select * FROM EMPLOYEE ORDER BY ENO DESC, ENAME ;
+
+
+
+
+--1. 덧셈, 모든사원 300$ 급여인상, 이름, 급여, 인상된 급여 넣기
+SELECT ENO, ENAME, SALARY, SALARY+300 FROM EMPLOYEE;
+
+--2.이름, 급여, 연간 총수입을 총수입기준으로 내림차순으로 출력, 연간 총수입 = 월급 *12 + 100(상여)
+SELECT ENAME, SALARY, salary*12+100 AS "연봉" FROM employee ORDER BY SALARY DESC;
+
+--3. 급여가 2000 넘는 사원의 이름과 급여를 급여를 기준으로 내람차순으로
+SELECT ENAME, SALARY FROM EMPLOYEE WHERE SALARY > 2000 ORDER BY SALARY DESC;
+
+--4. 사원 번호가 7788인 사원의 이름과 부서번호
+SELECT ENAME, dno FROM EMPLOYEE WHERE ENO = 7788;
+
+SELECT * FROM employee; --부서번호 열의 이름이 어떻게 정의 되어 있는지 한번 봤음.
+
+
+--5. 급여가 2000~3000사이가 아닌 사원의 이름과 급여
+SELECT ENAME, SALARY FROM EMPLOYEE WHERE salary NOT BETWEEN 2000 AND 3000;
+
+
+--6. 1981/02/20~1981/05/01 사이에 입사한 사원의 이름, 담당업무, 입사일
+SELECT ENAME, JOB, HIREDATE FROM employee WHERE HIREDATE BETWEEN '81/02/20' AND '81/05/01'; 
+
+--7. 부서 번호가 20 및 30에 속하는 사원의 이름과 부서 번호 출력, 이름을 기준으로 내림차순으로 출력
+SELECT ENAME, DNO FROM EMPLOYEE WHERE DNO IN( 20, 30) ORDER BY ename;
+
+--8. 사원급여가 2000~3000, 부서번호가 20 OR 30인 사원의 이름과 급여와 부서번호, 이름을 기준으로 오름차순
+SELECT ENAME, SALARY, DNO FROM employee WHERE SALARY BETWEEN 2000 AND 3000 AND DNO = 20 OR DNO = 30 ORDER BY ENAME;
+
+--9. 1981년도 입사한 사원의 이름과 입사일 
+SELECT ENAME,HIREDATE FROM EMPLOYEE WHERE HIREDATE LIKE '1981%';
+
+--10. 관리자가 없는 사원의 이름과 담당업무
+SELECT ENAME, JOB FROM EMPLOYEE WHERE MANAGER IS NULL;
+
+--11. 커미션을 받을 수 있는 자격이 되는 사원의 이름, 급여, 커미션 출력, 급여 및 커미션을 기준으로 내림차순
+SELECT ENAME, SALARY, COMMISSION FROM EMPLOYEE WHERE COMMISSION IS NOT NULL ORDER BY SALARY DESC, COMMISSION DESC;
+
+--12. 이름의 3번째 문자가 R인 사원 출력
+SELECT ENAME FROM EMPLOYEE WHERE ENAME LIKE '__R%';
+
+--13. 이름에 A와 E를 모두 포함 하는 사원
+SELECT ENAME FROM EMPLOYEE WHERE ENAME LIKE '%A%' AND ENAME LIKE '%E%';
+
+--14. 담당업무가 CLERK OR SALESMAN 이면서 급여가 $1600, 950 또는 1300이 아닌 사원의 이름, 담당업무, 급여
+SELECT ENAME, JOB, SALARY FROM EMPLOYEE WHERE JOB = 'CLERK' OR JOB = 'CLERK' AND SALARY NOT IN (1600, 950, 1300);
+
+--15. 커미션이 500$ 이상인 사원의 이름과 급여 및 커미션
+SELECT ENAME, SALARY, COMMISSION FROM employee WHERE COMMISSION >= 500;
+
+
+
+--데이터 형식
+--숫자, 문자 데이터가 있다. 
+/* 전체 자리수는 38 자리까지 표현 가능 22바이트 가변길이 숫자를 저장
+
+NUMBER : 숫자 데이터 사용
+NUMBER(a):  전체 자리 수를 a만큼 표시
+NUMBER(a ,b) : 전체자리 a개에 소숫점 b 까지 표시 
+
+문자DATA
+
+CHAR(n) :  1~ 2000까지의 문자 지정
+NCAHR(n) : 유니코드 고정 길이 문자열 1~2000 까지
+VARCHAR(n) : 가변길이 문자열 1~4000까지
+NVACHAR (n)
+CLOB
+NCLOB
+
+
+이진데이터
+BLOB
+BFLIE
++ 동영상과 음성을 넣을 수 있다. 
+오라클에 있는 버전마다 얼마만큼 잡아 먹는지 다르다. 
+
+날짜 DATA
+DATA :[7 byte] 기원전 
+TIMESTAMP: [11 byte] DATA + 밀리초단위까지 저장
+TIMSTAP WITH TIME ZONE:[13 byte] : 날짜와 시간대 형태의 DATA
+TIMESTAMP WITH LOCAL RIME ZONE:[11 byte] 날짜와 시간대 형태, 조회하면 클라이언트의 시간대로 보여짐
+
+형변황 
+TO_변형하고 싶은 형
+
+
+*/
+
+SELECT ENAME, HIREDATE, TO_CHAR(HIREDATE.'YY-MM') FROM EMPLOYEE;
+SELECT TO_CHAR(SYSDATE.'YY/MM/FF.HH24:ML:SS') FROM DUAL;
+
+
+
+
+    
+    
+    
+    
+    

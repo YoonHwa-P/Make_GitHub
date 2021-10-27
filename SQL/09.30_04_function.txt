@@ -1,0 +1,128 @@
+/*오라클 DB에 있는 내장함수
+
+문자열함수, 숫자와 수학함수, 날짜/시간 함수, 형변환함수, 분석함수, 확장함수
+기타 함수 등으로 나눌 수 있고, 이중 형변환 함수도 있다. 
+
+ASCII(영문자)
+
+*/
+
+select ascii('t') from dual ; --한문자의 아스키 값을 반환
+select char(116) from dual ; -- 숫자 아스키값에 해당하는 문자 반환
+select asciistr ('찬') from dual ; -- 유니코드 문자를 입력하면 16진수의 유니코드 반환
+select unistr('\CC2C') from dual ; -- 유니코드값을 입력하면 해당 문자를 반환
+
+
+
+--length : 문자열의 길이 반환 : B(바이트수 ), C(유니코드 문자열 길이)
+ select length('안녕?'), lengthb('안녕하슈'), length('한굴') from dual;
+ 
+ 
+ --문자열 함수
+ -- concat(문자열 1, 문자열2) : 두개의 문자열 결합
+ --answkduf 1 || 문자열 2 : 두개 이상의 문자열 결합
+ 
+ 
+ select concat( '이것은' , '오라클이다.'), '이것은'||'오라클'||'이다.' from dual;
+ 
+ --문자열이 어떤 위치에 있는지 찾기.
+ select instr('이것이 oracle이다. 이것도 오라클이다.', '이것') from dual;
+ --문자열
+select instr('이것이 oracle이다. 이것도 오라클이다.', '이것', 16) from dual;
+--문자열이 어떤 바이트위치에 있는지 찾기. 시작위치는 2부터
+select instrb('이것이 oracle이다. 이것도 오라클이다.', '이것', 2) from dual;
+
+--소문자를 대문자로, 대문자를 소문자로
+select lower('ABCD efg HIJ'), upper('ABCD efg HIJ'), initcap('ABCD efg HIJ') from dual;
+--이것이를 this is로 바꿈
+select replace('이것이 oracle이다.', '이것이', 'this is') from dual;
+
+select translate('이것이 oracle이다.', '이것', 'ab') from dual;
+
+--예제
+select ename, lower (ename), job, initcap(job) from employee where ename = 'scott';
+select eno, ename, dno from employee where ename = upper('scott');
+select eno, ename, dno from employee where intcap('scott');
+
+
+--문자열 함수 
+--substr(문자열, 시작위치, 길이) : 시작위치 3에서부터 문자 2개 추출
+select substr('대한독립만세', 3, 2) from dual;
+--문자열을 거꾸로 뒤집어줌
+select reverse('oracle') from dual;
+-- 빈공간을 문자로 채워 줌, L: left, R: right
+select lpad('이것이', '10', '##')from dual;
+select rpad('이것이', '10', '##')from dual;
+--공백 없애주기
+select trim('         이번 생은')from dual;
+select ltrim('         이번 생은'), rtrim('망했어요 ㅎㅎ', 'ㅎ')  from dual;
+
+
+--안에 있는 문자열 수 세기 
+select regexp_count('이것이 오라클이다','이') from dual;
+-- ename에서 마지막에서 1번째인 글짜 1개가 N인거
+select * from employee where substr (ename, -1, 1) = 'N';
+select* from employee where substr(hiredate,1,2) = '87';
+--빈공간 채워주기.
+select lpad(salary, 10, '*') from employee;
+
+-- 수학 함수
+select abs(-100) from dual;
+select asin(0.5) from dual;
+select log(10) from dual;
+--올림, 내림, 반올림, 버림
+select ceil(4.7),FLOOR(15.7) from dual;
+select round(1.57), trunc(1.571, -2) from dual;
+
+-- 내장 함수 날짜시간함수
+select add_months('2020-01-01',5), add_months(sysdate,-5) from dual;
+select TO_DATE('2020-01-01')+5, sysdate-5 from dual;
+select current_date, sysdate, current_timestamp from dual;
+select extract(year from date '2019-06-27'), extract(day from sysdate) from dual;
+select last_day('2019-05-05'),
+        next_day('2020-01-03', '월요일'),
+        next_day(sysdate, '일요일')
+        from dual;
+select MONTHS_BETWEEN(SYSDATE,'11/03/28') from dual;
+select BETWEEN(SYSDATE,'11/03/28') from dual;
+select round(sysdate-hiredate) as "근무일수" from employee;
+select sysdate, next_day(sysdate, '토요일') from dual;
+select ename, hiredate, add_months(hiredate,6) from employee;
+select ename, hiredate, last_day(hiredate) from employee;
+
+
+select numtodsinterval(48,'hour') from dual;
+select numtodyinterval(600,'month') from dual;
+
+
+--기타 일반함수
+--NVL, NVL2
+
+--null이면 대체
+select ename, salary, commission, 
+NVL(commission, 0),
+salary*12 +nvl(commission,0) from employee;
+
+select ename, salary, commission, 
+NVL2(commission, salary*12+commission, salary*12) from employee;
+
+--nullif  두 수가 같으면 null,  다르면 앞의 숫자 꺼내기
+select nullif('A','A'), nullif('a', 'A') from dual;
+
+select ename, salary, commission, COALESCE(commission, salary, 0) from employee;
+
+--DB의 case문 dno가 10일때, 
+select ename, dno, decode(dno, 10, 'ACCOUNTING', 20, 'RESEARCH', 30, 'SALES', 40, 'OPERATUINS', 'DEFAULT')
+    from employee;
+
+select ename, dno,
+case when dno = 10 then 'ACCOUNTING'
+    when dno = 20 then 'RESEARCH'
+    when dno = 30 then 'SALES'
+    when dno = 40 then 'OPERATUINS'
+    ELSE 'DEFAULT' END 
+from employee;
+
+
+
+

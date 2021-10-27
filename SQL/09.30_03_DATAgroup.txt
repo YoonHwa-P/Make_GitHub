@@ -1,0 +1,82 @@
+
+-- alter user [계정이름] account unlock identified by [비밀번호]
+-- 비밀번호 변경 : alter user [계정이름] identified by [새로운비밀번호]
+
+
+--형변환 함수
+--숫자를 날짜 형식으로
+select ename, hiredate from employee where hiredate = to_date(19810220, 'yyyymmdd');
+
+--T0_NUMBER()  :  특정데이터를 숫자형으로 변환
+select to_number ('10,000','999,999') from dual;
+select to_char (salary, '000,999')from employee;
+
+select to_number ('10,000','900,000')- to_number('5,000','999,999') from dual;
+
+
+--그룹함수의 개념
+--반올림은  round 내림은 trunc
+select sum(salary) as "급여총액"
+    round(avg(salaty),2) as "급여평균"
+    max (salary)
+    min (salary)
+    from employee;
+    select max(hiredate), min(hiredate) from employee;
+    
+    
+    
+    
+    --그룹 함수에서는 null 값은 제외하고 함수 진행
+    
+    --count 함수
+    --count(*) 모든 행의 개수를 구한다. 
+    --count(컬럼) 해당 컬럼에서 합을 구한다. 
+    
+    select count(*) as "사원수" from employee;
+    select sum (commission) from employee ;
+    select count (commission) as "커미션 받는 사람의 수" from employee where commission is not null;
+    
+    
+    select * from employee;
+    
+    --행의 개수를 구하는 count + distinct
+    --distinct를 사용해서 중복된 값을 제거 하고 개수를 구할 수 있다. 
+    
+    select sum(salary) from employee;
+    select count(distinct dno) from employee;
+    
+    
+    --데이터 그룹 : group by
+    
+    select avg(salary), dno from employee group by dno;
+    -- AVG와 같은 그룹 함수는 결과 값이 하나인데, 그냥 일반 필드랑 같이 넣어주면 오류가 뜰 수 있다. 
+    --따라서 dno를 group으로 묶어주어 dno group별로 결과를 도출 할 수 있다.
+    select avg(salary), job from employee group by job;
+    
+    -- group by절에 두개 이상의 컬럼명을 작성하면 상위 그룹과 하위 그룹으로 나뉘어져 결과를 반환 한다. 
+    select job, dno as "부서번호", avg(salary) as"급여평균", max(salary) from employee group by dno, job order by dno, job asc;
+    
+    
+   --평균 급여가 2000이상인 그룹의 급여 총액 구하기
+   select job, avg(salary), sum (salary) from employee group by job having avg(salary) > = 2000; 
+    --group 함수에서는 where 을 쓸 수가 없어서 having 을 써 줘야 한다. 하지만 같이 쓸 수 있다. 
+    select job, avg(salary), sum (salary) from employee where hiredate between'81/01/01' and '95/12/31' group by job having avg(salary) > = 2000;
+    
+    --예제
+    --1. 부서별 최고 급여가 3000 이상인 부서의 번호와 부서별 최고 급여 
+    select dno, max(salary) from employee group by dno having max(salary) >3000;
+    --2. 메니저를 제외하고 급여 총액이 5000 이상인 담당 업무별 급여 총액과 해당 인원
+    select job, sum(salary), count(salary) from employee where job != 'MANAGER' group by job having sum(salary)>=5000;
+    --3.부서별 평균 급여중 최고 평균 급여
+    select dno, max(avg(salary)) from employee group by dno ;
+    
+    
+    
+    --rollup() 함수 
+    --중간 합계를 추가 처리 해 주는 함수
+    
+    select job, sum (salary) from employee group by rollup(job);
+    select job, dno, sum (salary) from employee group by rollup(dno), job;
+   select job, dno, sum (salary) from employee group by dno, job order by dno;
+    
+    

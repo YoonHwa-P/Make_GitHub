@@ -1,0 +1,175 @@
+--DML 데이터 조작어 : 데이터를 추가. 삭제 하는명령어
+    --INSERT : 테이블에 데이터를 삽입
+
+    -- INSERT INTO [TABLE NAME] (컬럼이름1, 2,3, ...) VALUES (데이터1, 2, ...);
+    -- dno, eno가 현재 employee table의 기본키다.
+
+    INSERT INTO employee (eno, ename, job, manager, hiredate, salary, commission, dno)
+        values(8121, 'ALICE', 'CLERK', 7788, sysdate, 1200, 100, 10);
+   
+    INSERT INTO employee 
+        values (8231, 'KATHERINE', 'SALESMAN', 7698, sysdate, 1750, 800, 30);
+
+    commit;
+    
+    select*from employee;
+    
+    --insert DATA null을 입력 해 주거나, '' 이걸 입력하면 null이 입력됩
+    -- tabel 자체에 not null을 선언 하여 null이 입력 되는 것을 막는 필드도 생성 가능.
+    
+    insert into employee(eno) values(8500);
+    insert into emplpyee (eno, ename) values(8700, ''); -- ename은 제약조건이 not null이라 insert가 안된다. 
+    --constrain_type R : 다른 table 과 연결되어 있어서 null안됨, P : 기본값이라 null안됨
+    select * from all_constraints where table_name = 'EMPLOYEE';
+    
+    
+    --insert 날짜 data 추가
+    -- 형식에 맞게 입력 해야 함 (YYYY/MM/DD)
+    insert into employee(eno, ename, hiredate) 
+        values(8800, null, '2020/12/31');
+       
+    --To_date 함수 사용 가능 (형식이 골라서 나오게 할 수도 있다.)
+    insert into employee(eno, ename, hiredate)
+        values(8900, null, to_date('20201231', 'yyyymmdd'));
+    
+    --현재 날짜를 이용할 때는 sysdate사용
+    insert into employee(eno, ename, hiredate)
+        values (8950, null, sysdate);
+
+ select*from employee;
+ 
+ 
+ --데이터 복사
+ --서브쿼리를 시용해서 대중행 입력 가능
+ 
+ --새로운 테이블생성 , where 0=1은 구조만(형식) 복사하는것.
+create table EMP2 as select * from employee where 0=1;
+
+select * from emp2;
+-- 빈 테이블을 생성 한 것을 볼 수 있다. 
+
+insert into emp2
+    select * from employee;
+    
+--빈 테이블에 employee의 모든 것이 삽입(20개 행이 삽입 되었다. )
+--create table EMP2 as select * from employee where 1=1; 
+--이렇게 넣으면 (where =참) 전부다 복사 가능
+--create table emp2 as select *from employee ; 전부다 복사 가능
+
+
+--update
+--기존데이터 변경 할때 사용하는 명령어
+--update [tabel name] set 컬럼명1 = data1, 컬럼명2 = data2, 
+
+create table EMP3 as select * from employee where 0=1;
+insert into emp3(eno) values (8500);
+
+    select * from emp3 where eno = 8500; 
+        update emp3 set ename = 'RUNA', job ='MANAGER' where eno = 8500;
+        update emp3 set commission = 500;
+        
+        commit;
+        
+        --서브쿼리를 이용해서 데이터를 변경 할 수 있다.
+    update emp2  set salary = (select losal
+    from salgrade where grade = 1) where dno is null;
+        
+        select * from emp2;
+     select * from department;
+-- 예제 이름이 없는 사원의 소속을 OPERATIONS로 옮기고 담당 업무가 PRESIDENT의 직속 부서로 
+
+    update emp2
+        set dno = (select dno from department
+        where dname ='OPERATIONS'),
+        manager = (SELECT eno from emp2
+        where job ='PRESIDENT')
+        where ename is null;
+
+
+--delete는 기존 데이터를 삭제하는 방법
+--delete from 테이블명 where 조건.  where을 안쓰면 table전체 삭제가 됨.
+
+    delete from emp2 where ename is null;
+    select * from emp2 ;
+
+
+-- f12(roll badk)를 누르면 되돌아간다. 
+--서브쿼리로 나온 값을 기준으로 레코드를 삭제 할 수 있다. 
+--부서명이 RESEARCH 인 사원의 정보 모두 삭제
+
+    delete from emp2
+        where dno = (select dno 
+        from department
+        where dname = 'RESEARCH');
+
+
+--트랜젝션이란 데이터를 처리하기 위한 논리적인 작업의 단위 (Ctrl + Enter)
+--오라클은 이런 트랜젝션을 기반으로 데이터의 일관성을 보장한다. (누가 보던 일관적인  data 보장)
+--SQL 기본 명령어 중에서 DDL, DCL은 하나의 명령어가 하나의 트랜젝션을 이루고
+--DML은 하나 이상의 명령으로 트랜젝션을 구성한다. 
+--all or nothig 방식: 여러개 명령중 하나만 잘못되도 모든 명령 취소시켜 데이터의 일관성 유지
+--commit과 rollback을 이용하여 트랜젝션 관리.
+
+
+--commit은 모든 과정 확정, rollback해도 돌어가지 않음.= 영구저장, 하나의 트랜젝션 종료
+--rollback은 트랜젝션으로 발생한 변경사항 취소.
+
+create table D2 as select * from department;
+select * from d2;
+delete from d2 where dno = 10;
+
+
+
+
+-- ch08 데이터 조작
+--1. Empolyee 테이블의 구조만 복사하여 EMP_INSERT란 빈 테이블을 만드세요.
+
+    create table EMP_INSERT as select * from employee where 0=1;
+    
+--2. 본인을 EMP_INSERT 테이블에 추가하고  sysdate를 hiredate로 입력
+
+    insert into EMP_INSERT ( ename, hiredate) values('YH_Park', sysdate);
+    select * from EMP_INSERT;
+    delete  from EMP_INSERT;
+    
+ --3.  EMP_INSER에 옆사람을 추가하되 To_date 이용하여 입사일을 어제로
+ 
+    insert int EMP_INSERT (ename, hiredate) 
+        values('JM_LEE', To_date(20210930, yyyymmdd));
+        
+--4. Employee 테이블의 구조와 내용을 복사하여 Emp-copy란 이름의 테이블을 생성
+
+    create table EMP_copy as select * from Employee;
+     select * from EMP_copy;
+  
+--5. 사원 번호가 7788인 사원의 부서번호를 10으로 수정
+    update EMP_COPY set dno= 10 where eno = 7788;
+    
+--6. 사원번호가 7788의 담당업무및 급여를 사원번호 7499의 담당 업무 및 급여와 일치하도록 생신 
+    update EMP_COPY 
+        set job = (select job from Emp_copy where eno = 7499),
+            salary = (select salary from emp_copy where eno = 7499)
+            where eno = 7788;
+            
+--7. 사원번호 7369와 업무가 동일한 모든 사원의 부서번호를 사원7369의 현재 부서버호로갱신
+    update EMP_COPY 
+        set dno = (select dno from emp_copy where eno=7369)
+            where job =(select job from emp_copy where eno = 7369);
+       
+        select * from EMP_copy;
+--8. Department 테이블의 구조와 내용을 복사하여 DPT_COPY를 만들자
+    create Table DPT_COPY as select * from department ;
+     
+    select * from DPT_COPY;
+--9. DPT_COPY테이블에서 부서명이 RESEARCH인 부서를 제거
+
+    delete from DPT_COPY where dname = 'RESEARCH';
+    
+--10. DPT_COPY테이블에서 부서번호가 10 0r 40 인 부서 제거
+     delete from DPT_COPY where dno in (10 , 40) ;
+    
+    
+    
+    
+    
+    
