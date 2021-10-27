@@ -82,7 +82,7 @@
 
 Ref.
 
-*파이참, 아나콘다 DownLoad
+*파이참, 아나콘다 DownLoad <br>
 **_ㅁ_**  https://www.anaconda.com/products/individual#Downloads <br>
 **_ㅁ_**  https://www.jetbrains.com/pycharm/download/ <br>
 **_ㅁ_**  https://git-scm.com/
