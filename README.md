@@ -12,24 +12,24 @@
 <br>
 <body style="bg-color:pink;">
 
- - <h3>오늘 한 내용 정리</h3>
-   + slack join (green_702)
-   + anaconda install 
-     + system Path (환경변수 설정_자동)
-   + pycham install
-   + gitHub blog 만들기 (회원가입 & repository 생성)
-   + gitHub에 repository 만들고, file UPloading 하기_01
-     1. gitHub에서  repository 만들기 클릭
-     2. 이름 red로 설정후 하단에 add a README.file 체크
-     3. 바탕화면에서 우측클릭후 git bash here 선택
-     4. 링크로 연결 : git clone https://github.com/각자계정/red.git
-   
-   + gitHub에 repository 만들고, file UPloading 하기_02
-        1. file 만들기(Blue) 
-        2. GitHub에 repository 만들기(Blue); 이름이 같지 않으면 안됨
-        3. 원하는 file 넣기 (folder 가능)
-   + git 명령어
-     + terminal Tap에 Git Bash를 활성화하여 명령어 입력
+ - <h3>오늘 한 내용 정리</h3> 
+   + slack join (green_702) <br>
+   + anaconda install  <br>
+     + system Path (환경변수 설정_자동) <br>
+   + pycham install <br>
+   + gitHub blog 만들기 (회원가입 & repository 생성) <br>
+   + gitHub에 repository 만들고, file UPloading 하기_01 <br>
+     1. gitHub에서  repository 만들기 클릭 <br>
+     2. 이름 red로 설정후 하단에 add a README.file 체크 <br>
+     3. 바탕화면에서 우측클릭후 git bash here 선택 <br>
+     4. 링크로 연결 : git clone https://github.com/각자계정/red.git <br>
+    <br> 
+   + gitHub에 repository 만들고, file UPloading 하기_02 <br>
+        1. file 만들기(Blue)  <br>
+        2. GitHub에 repository 만들기(Blue); 이름이 같지 않으면 안됨 <br>
+        3. 원하는 file 넣기 (folder 가능) <br>
+   + git 명령어 <br>
+     + terminal Tap에 Git Bash를 활성화하여 명령어 입력 <br>
      
  <h2>$ git init</h2>
    >$ git init_ git을 initiation 해 준다. (초기화)
